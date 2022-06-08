@@ -1,24 +1,22 @@
-import logo from './logo.svg';
-import './App.css';
+import { Route, Routes } from "react-router-dom";
+import PrivateRoute from "./components/PrivateRoute";
+import Dashboard from "./pages/Dashboard/Dashboard";
+import { nestedRoutes } from "./routes/nestedRoutes";
+import { publicRoutes } from "./routes/publicRoutes";
+
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Routes>
+      {publicRoutes.map(({ path, Component }, index) => (
+        <Route key={index} path={path} element={<Component />} />))}
+      <Route element={<PrivateRoute />}>
+        <Route path="/dashboard" element={<Dashboard />}>
+          {nestedRoutes.map(({ path, name, Component }, index) => (
+            <Route key={index} path={path} index={name === 'ManageUsers'} element={<Component />} />))}
+        </Route>
+      </Route>
+    </Routes>
   );
 }
 
